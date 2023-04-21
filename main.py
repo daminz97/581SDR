@@ -72,7 +72,6 @@ def main():
         # Camera capture
         print('Opening camera...')
         success, img = cap.read()
-        cv.imshow("Result: ", img)
         debug_image, gesture_id = gesture_detector.recognize(img, number, mode)
         gesture_buffer.add_gesture(gesture_id)
 
@@ -80,7 +79,7 @@ def main():
         threading.Thread(target=bebop_control, args=(gesture_controller,)).start()
 
         debug_image = gesture_detector.draw_info(debug_image, fps, mode, number)
-        cv.imshow('Tello Gesture Recognition', debug_image)
+        cv.imshow('Gesture Recognition', debug_image)
 
     bebop.smart_sleep(5)
     bebop.safe_land(10)
