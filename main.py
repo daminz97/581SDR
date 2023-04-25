@@ -8,6 +8,7 @@ from pyparrot.DroneVision import DroneVision
 from gestures.gesture_controller import GestureController
 from utils import CvFpsCalc
 from gestures import *
+from voice import PorcupineThread
 
 def main():
     # init global vars
@@ -19,6 +20,13 @@ def main():
     FRAME_HEIGHT = 640
     in_flight = False
 
+    # Starting voice control
+    print('Starting Voice Control...')
+    porcupine_thread = PorcupineThread(access_key='tHwfakI2LOhb/1l09yRCc22zakbkuNTZSb5RTmxsjC5NZdPk6jaWnQ==',
+                                       device_index=-1,
+                                       keyword_var=['./model/stop-device_en_linux_v2_2_0.ppn'])
+    porcupine_thread.start()
+
     # Camera preparation
     print('Connecting...')
     bebop = Bebop()
@@ -27,7 +35,7 @@ def main():
     # bebop.start_video_stream()
 
     # cap = tello.get_frame_read()
-    cap = cv.VideoCapture(1)
+    cap = cv.VideoCapture(0)
     cap.set(3, FRAME_WIDTH)
     cap.set(4, FRAME_HEIGHT)
     cap.set(10, 150)
@@ -53,7 +61,7 @@ def main():
     # bebop.move_relative(0, 0, 10, math.radians(0))
 
     while cap.isOpened():
-        print('Laptop camera in...')
+        # print('Laptop camera in...')
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
             break
@@ -70,9 +78,9 @@ def main():
         fps = cv_fps_calc.get()
 
         # Camera capture
-        print('Opening camera...')
+        # print('Opening camera...')
         success, img = cap.read()
-        cv.imshow("Result: ", img)
+        # cv.imshow("Result: ", img)
         debug_image, gesture_id = gesture_detector.recognize(img, number, mode)
         gesture_buffer.add_gesture(gesture_id)
 
