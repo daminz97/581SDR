@@ -24,7 +24,7 @@ def main():
     print('Starting Voice Control...')
     porcupine_thread = PorcupineThread(access_key='tHwfakI2LOhb/1l09yRCc22zakbkuNTZSb5RTmxsjC5NZdPk6jaWnQ==',
                                        device_index=-1,
-                                       keyword_var=['./model/stop-device_en_linux_v2_2_0.ppn'])
+                                       keyword_var=['./model/stop-device_en_mac_v2_2_0.ppn'])
     porcupine_thread.start()
 
     # Camera preparation
@@ -32,9 +32,8 @@ def main():
     bebop = Bebop()
     success = bebop.connect(10)
     print(success)
-    # bebop.start_video_stream()
+    bebop.start_video_stream()
 
-    # cap = tello.get_frame_read()
     cap = cv.VideoCapture(0)
     cap.set(3, FRAME_WIDTH)
     cap.set(4, FRAME_HEIGHT)
@@ -56,12 +55,10 @@ def main():
     mode = 0
     number = -1
     
-    print('hello')
-
-    # bebop.move_relative(0, 0, 10, math.radians(0))
+    print('Take Off')
+    bebop.move_relative(0, 0, 10, math.radians(0))
 
     while cap.isOpened():
-        # print('Laptop camera in...')
         key = cv.waitKey(1) & 0xFF
         if key == ord('q'):
             break
@@ -78,9 +75,7 @@ def main():
         fps = cv_fps_calc.get()
 
         # Camera capture
-        # print('Opening camera...')
         success, img = cap.read()
-        # cv.imshow("Result: ", img)
         debug_image, gesture_id = gesture_detector.recognize(img, number, mode)
         gesture_buffer.add_gesture(gesture_id)
 
