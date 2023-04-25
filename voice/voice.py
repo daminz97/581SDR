@@ -37,6 +37,14 @@ class PorcupineThread(Thread):
                 keyword_index = ppn.process(pcm)
                 if keyword_index == 0:
                     print("drone stopped")
+                    self.bebop.fly_direct(
+                        roll=0,
+                        pitch=0,
+                        yaw=0,
+                        vertical_movement=0,
+                        duration=2
+                    )
+
         finally:
             if recorder is not None:
                 recorder.delete()
